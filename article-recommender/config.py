@@ -22,6 +22,7 @@ Key areas to develop:
 - CS fundamentals (concurrency, networking, OS-level concepts)
 - How things work under the hood (internals of databases, compilers, operating systems, networks, runtimes — deepens fundamental understanding)
 - Algorithms (real-world applications, not just leetcode)
+- Design patterns (Gang of Four, SOLID, real-world usage in large codebases)
 - Engineering leadership (technical decision-making, RFC writing, cross-team influence)
 - Observability & reliability (monitoring, SLOs, incident response, chaos engineering)
 """

@@ -12,7 +12,7 @@ ARTICLES_TAB = "Articles"
 USAGE_TAB = "Usage"
 
 # Headers for each tab
-ARTICLES_HEADERS = ["Date", "Title", "URL", "Source", "Summary", "Tags", "Status", "Est. Read Time", "Rating", "Notes"]
+ARTICLES_HEADERS = ["Date", "Title", "URL", "Source", "Summary", "Tags", "Status", "Rating", "Notes"]
 USAGE_HEADERS = ["Date", "Input Tokens", "Output Tokens", "Cache Read", "Cache Creation", "Cost USD", "Articles Analyzed"]
 
 
@@ -64,8 +64,8 @@ def read_feedback() -> list[dict]:
 
     feedback = []
     for row in rows[1:]:
-        # Rating is col 8 (index 8), Notes is col 9 (index 9)
-        rating = row[8].strip() if len(row) > 8 else ""
+        # Rating is col 7 (index 7), Notes is col 8 (index 8)
+        rating = row[7].strip() if len(row) > 7 else ""
         if not rating:
             continue
         feedback.append({
@@ -73,7 +73,7 @@ def read_feedback() -> list[dict]:
             "title": row[1] if len(row) > 1 else "",
             "url": row[2] if len(row) > 2 else "",
             "rating": rating,
-            "notes": row[9].strip() if len(row) > 9 else "",
+            "notes": row[8].strip() if len(row) > 8 else "",
         })
     return feedback
 
@@ -95,8 +95,8 @@ def read_sent_articles() -> list[dict]:
             "title": row[1] if len(row) > 1 else "",
             "url": row[2],
             "tags": row[5] if len(row) > 5 else "",
-            "rating": row[8] if len(row) > 8 else "",
-            "notes": row[9] if len(row) > 9 else "",
+            "rating": row[7] if len(row) > 7 else "",
+            "notes": row[8] if len(row) > 8 else "",
         })
     return articles
 
@@ -118,7 +118,6 @@ def write_articles(articles: list[dict], status: str = "sent"):
             _safe_cell(article.get("summary", "")),
             _safe_cell(tags),
             status,
-            str(article.get("estimated_read_minutes", "")),
         ])
 
     if rows:

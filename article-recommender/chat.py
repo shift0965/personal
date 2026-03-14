@@ -19,11 +19,10 @@ def send_pick(article: dict | None, dry_run: bool = False):
     source = html.escape(article.get("source", "Unknown"))
     summary = html.escape(article.get("summary", "No summary available."))
     url = article.get("url", "")
-    read_time = article.get("estimated_read_minutes", "?")
 
     text = f"<b>Today's Read ({today})</b>\n\n"
     text += f"<b>{title}</b>\n"
-    text += f"Source: {source} | {read_time} min read\n"
+    text += f"Source: {source}\n"
     if tags:
         text += f"Tags: {tags}\n"
     text += f"\n{summary}\n\n"

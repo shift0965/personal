@@ -17,7 +17,7 @@ Phase 2: Fetch article content → Claude picks best 1 + writes summary/tags
 ## Daily Flow (main.py)
 
 1. Init sheets (create tabs if missing)
-2. Read context from Sheets (sent history with tags/ratings, feedback, wishlist/goals)
+2. Read context from Sheets (sent history with tags/ratings, feedback)
 3. **Phase 1 — Recommend**: Claude suggests 5 classic article candidates, avoiding previously sent articles
 4. **Phase 2 — Evaluate**: Fetch content from those 5 URLs, Claude picks the best 1, writes summary + tags
 5. Write pick to Articles tab, send via Telegram, log usage
@@ -27,20 +27,19 @@ Phase 2: Fetch article content → Claude picks best 1 + writes summary/tags
 | File | Purpose |
 |------|---------|
 | `main.py` | Entry point, orchestrates the daily flow. Flags: `--init`, `--dry-run` |
-| `config.py` | All configuration: API keys (from `.env`), user profile |
+| `config.py` | All configuration: API keys (from `.env`), `USER_PROFILE` (learning goals — single source of truth) |
 | `analyzer.py` | Claude CLI integration — 2-phase recommend + evaluate, content fetching |
-| `sheets.py` | Google Sheets CRUD via `gspread` — Articles, Wishlist, Usage tabs |
+| `sheets.py` | Google Sheets CRUD via `gspread` — Articles, Usage tabs |
 | `chat.py` | Telegram Bot API sender with HTML escaping |
 
-## Google Sheets Layout (1 spreadsheet, 3 tabs)
+## Google Sheets Layout (1 spreadsheet, 2 tabs)
 
 - **Articles** — sent articles with summaries, tags, status, + Rating/Notes columns for inline feedback
-- **Wishlist** — topics the user wants to learn (user edits directly, pre-populated with FAANG-prep topics)
 - **Usage** — daily token usage tracking (input/output tokens, cost)
 
 ## Key Design Decisions
 
-- **No static pool** — Claude generates fresh candidates each run based on goals, feedback, and sent history
+- **No static pool** — Claude generates fresh candidates each run based on `USER_PROFILE` in config.py, feedback, and sent history
 - **2-phase Claude flow** — Phase 1 suggests candidates, Phase 2 reads actual content to make the final pick
 - **Claude CLI (`claude -p`)** instead of Anthropic API — uses the user's Pro subscription, no extra cost
 - **Content fetching** — Phase 2 fetches full article content via HTTP, strips HTML, truncates to ~5000 chars
@@ -63,7 +62,7 @@ TELEGRAM_CHAT_ID=<chat-id>
 
 ```bash
 source .venv/bin/activate
-python main.py --init      # First time: create sheet tabs + default wishlist
+python main.py --init      # First time: create sheet tabs
 python main.py --dry-run   # Test without sending Telegram or writing Sheets
 python main.py             # Normal daily run
 ```
