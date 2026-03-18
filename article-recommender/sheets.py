@@ -12,8 +12,8 @@ ARTICLES_TAB = "Articles"
 USAGE_TAB = "Usage"
 
 # Headers for each tab
-ARTICLES_HEADERS = ["Date", "Title", "URL", "Source", "Summary", "Tags", "Status", "Rating", "Notes"]
-USAGE_HEADERS = ["Date", "Input Tokens", "Output Tokens", "Cache Read", "Cache Creation", "Cost USD", "Articles Analyzed"]
+ARTICLES_HEADERS = ["Date", "Title", "URL", "Source", "Published", "Summary", "Tags", "Status", "Rating", "Notes"]
+USAGE_HEADERS = ["Date", "Input Tokens", "Output Tokens", "Cost USD", "Articles Analyzed", "Duration (s)"]
 
 
 _cached_spreadsheet: gspread.Spreadsheet | None = None
@@ -64,8 +64,8 @@ def read_feedback() -> list[dict]:
 
     feedback = []
     for row in rows[1:]:
-        # Rating is col 7 (index 7), Notes is col 8 (index 8)
-        rating = row[7].strip() if len(row) > 7 else ""
+        # Rating is col 8 (index 8), Notes is col 9 (index 9)
+        rating = row[8].strip() if len(row) > 8 else ""
         if not rating:
             continue
         feedback.append({
@@ -73,7 +73,7 @@ def read_feedback() -> list[dict]:
             "title": row[1] if len(row) > 1 else "",
             "url": row[2] if len(row) > 2 else "",
             "rating": rating,
-            "notes": row[8].strip() if len(row) > 8 else "",
+            "notes": row[9].strip() if len(row) > 9 else "",
         })
     return feedback
 
@@ -94,9 +94,9 @@ def read_sent_articles() -> list[dict]:
         articles.append({
             "title": row[1] if len(row) > 1 else "",
             "url": row[2],
-            "tags": row[5] if len(row) > 5 else "",
-            "rating": row[7] if len(row) > 7 else "",
-            "notes": row[8] if len(row) > 8 else "",
+            "tags": row[6] if len(row) > 6 else "",
+            "rating": row[8] if len(row) > 8 else "",
+            "notes": row[9] if len(row) > 9 else "",
         })
     return articles
 
@@ -115,6 +115,7 @@ def write_articles(articles: list[dict], status: str = "sent"):
             _safe_cell(article.get("title", "")),
             article.get("url", ""),
             _safe_cell(article.get("source", "")),
+            article.get("published_date", ""),
             _safe_cell(article.get("summary", "")),
             _safe_cell(tags),
             status,
@@ -130,12 +131,16 @@ def write_usage(usage: dict, articles_analyzed: int):
     ws = _ensure_tab(spreadsheet, USAGE_TAB, USAGE_HEADERS)
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    total_input = (
+        usage.get("input_tokens", 0)
+        + usage.get("cache_read_tokens", 0)
+        + usage.get("cache_creation_tokens", 0)
+    )
     ws.append_row([
         today,
-        str(usage.get("input_tokens", 0)),
+        str(total_input),
         str(usage.get("output_tokens", 0)),
-        str(usage.get("cache_read_tokens", 0)),
-        str(usage.get("cache_creation_tokens", 0)),
         str(round(usage.get("cost_usd", 0), 6)),
         str(articles_analyzed),
+        str(usage.get("duration_secs", 0)),
     ])

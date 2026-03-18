@@ -13,6 +13,7 @@ Usage:
 
 import os
 import sys
+import time
 import traceback
 
 from analyzer import recommend_candidates, evaluate_and_pick
@@ -28,6 +29,7 @@ from chat import send_pick, send_error_notification
 
 def run():
     dry_run = "--dry-run" in sys.argv
+    start_time = time.monotonic()
 
     if dry_run:
         print("[DRY RUN MODE] Will not send Telegram messages or write to Sheets.\n")
@@ -63,7 +65,7 @@ def run():
 
     # Combine usage from both phases
     usage = {}
-    for key in ("input_tokens", "output_tokens", "cache_read_tokens", "cache_creation_tokens", "cost_usd"):
+    for key in ("input_tokens", "output_tokens", "cost_usd"):
         usage[key] = phase1_usage.get(key, 0) + phase2_usage.get(key, 0)
 
     if usage:
@@ -76,10 +78,13 @@ def run():
         print("[5/5] Writing to Sheets & sending Telegram...")
         write_articles([winner], status="sent")
         if usage:
+            usage["duration_secs"] = int(time.monotonic() - start_time)
             write_usage(usage, len(candidates))
         send_pick(winner)
 
-    print("[DONE] Sent 1 article.")
+    elapsed = time.monotonic() - start_time
+    minutes, seconds = divmod(int(elapsed), 60)
+    print(f"[DONE] Sent 1 article. ({minutes}m {seconds}s)")
 
 
 def _sanitize(text: str) -> str:
