@@ -20,9 +20,13 @@ def send_pick(article: dict | None, dry_run: bool = False):
     summary = html.escape(article.get("summary", "No summary available."))
     url = article.get("url", "")
 
+    published = html.escape(article.get("published_date", ""))
+
     text = f"<b>Today's Read ({today})</b>\n\n"
     text += f"<b>{title}</b>\n"
     text += f"Source: {source}\n"
+    if published:
+        text += f"Published: {published}\n"
     if tags:
         text += f"Tags: {tags}\n"
     text += f"\n{summary}\n\n"

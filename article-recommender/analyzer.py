@@ -22,7 +22,8 @@ def _call_claude_cli(prompt: str) -> tuple[str, dict]:
         env=env,
     )
     if result.returncode != 0:
-        raise RuntimeError(f"claude CLI failed (exit {result.returncode}): {result.stderr[:500]}")
+        details = result.stderr[:500] or result.stdout[:500]
+        raise RuntimeError(f"claude CLI failed (exit {result.returncode}): {details}")
 
     raw = result.stdout.strip()
     try:

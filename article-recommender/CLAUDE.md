@@ -61,16 +61,15 @@ TELEGRAM_CHAT_ID=<chat-id>
 ## Running
 
 ```bash
-source .venv/bin/activate
-python main.py --init      # First time: create sheet tabs
-python main.py --dry-run   # Test without sending Telegram or writing Sheets
-python main.py             # Normal daily run
+python3 main.py --init      # First time: create sheet tabs
+python3 main.py --dry-run   # Test without sending Telegram or writing Sheets
+python3 main.py             # Normal daily run
 ```
 
 ## Cron
 
 ```
-0 8 * * * cd /Users/jackie/personal/article-recommender && .venv/bin/python main.py >> cron.log 2>&1
+0 8 * * * cd /Users/jackie/personal/article-recommender && python3 main.py >> cron.log 2>&1
 ```
 
 ## Security Notes
