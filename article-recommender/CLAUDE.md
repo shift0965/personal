@@ -47,7 +47,7 @@ Phase 2: Fetch article content → Claude picks best 1 + writes summary/tags
 
 ## User Profile Context
 
-The user (Jackie) is a mid-level SWE (SWE II at foundi, Taiwan) targeting Senior SWE at FAANG. The Claude prompt includes this profile so selection prioritizes system design, distributed systems, backend depth, CS fundamentals, and engineering leadership articles.
+The user's personal profile, learning goals, and article selection guidance are defined in `USER_PROFILE` in `config.py` (single source of truth).
 
 ## Environment (.env)
 
