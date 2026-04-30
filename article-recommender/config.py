@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Google credentials
-GOOGLE_CREDENTIALS_PATH = os.getenv("GOOGLE_CREDENTIALS_PATH")
+GOOGLE_CREDENTIALS_PATH = os.path.join(os.path.dirname(__file__), "service-account.json")
 GOOGLE_SHEET_ID = os.getenv("GOOGLE_SHEET_ID")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
@@ -16,21 +16,28 @@ Background: EE degree (National Sun Yat-sen University), bootcamp (AppWorks Scho
 Strengths: Frontend (Angular, React, Chart.js), Elasticsearch, Redis pub/sub, real-time systems, frontend testing.
 Weak areas: CS fundamentals — did not study CS undergrad, so missing formal foundations in OS, databases, networking, and concurrency.
 
-Goal: Senior Software Engineer at a top tech company (Google, Amazon, Meta).
-Near-term: Starting CMU Master of Software Engineering (Summer 2026). Preparing for these courses:
-1. 15-445/645 Database Systems — storage engines, B-trees, query optimization, transactions, concurrency control
-2. 15-619 Cloud Computing — virtualization, containers, auto-scaling, cloud-native architecture
-3. 15-440/640 Distributed Systems — RPC, consensus, replication, fault tolerance
-4. 15-410 Operating System Design and Implementation — processes, threads, virtual memory, scheduling, syscalls
-5. 15-618 Parallel Computer Architecture and Programming — concurrency, parallelism, memory models, GPU programming
-6. 15-642 Machine Learning Systems — ML infrastructure, training pipelines, serving systems
-7. 15-641 Networking and the Internet — TCP/IP, congestion control, DNS, HTTP, routing
+Goal 1: Prepare for CMU 15-319 Cloud Computing (starting Summer 2026).
+Key topics to cover:
+- Virtualization, hypervisors, containers (Docker, Kubernetes)
+- Auto-scaling, load balancing, cloud-native architecture
+- AWS core services (EC2, S3, Lambda, DynamoDB, SQS, etc.)
+- MapReduce, Spark, distributed data processing
+- Cloud storage systems, CDNs, caching strategies
+- Cost optimization, monitoring, cloud security basics
+
+Goal 2: Prepare for Fall 2026 tech internship interviews (targeting FAANG/top tech companies).
+Key topics to cover:
+- System design — scalable architectures, trade-offs, real-world system breakdowns
+- Distributed systems fundamentals — consistency, availability, partition tolerance
+- API design, database schema design, caching strategies
+- Concurrency, multithreading, and parallel programming concepts
+- Note: DSA/leetcode is covered separately — no algorithm articles needed
 
 Article selection guidance:
-- Spread across ALL 7 course areas over time, not just distributed systems
-- Prioritize areas I'm weakest in: OS, databases, networking, parallel computing (these are new to me)
-- Distributed systems is already well-covered — only send if it fills a specific gap
+- Split roughly 60/40 between cloud computing prep and interview prep
+- Prioritize cloud computing topics I'm weakest in: virtualization, MapReduce/Spark, cloud infrastructure
+- For interview prep, favor system design deep-dives over algorithm content
 - Mix of short blog posts (10-20 min, weekdays) and longer papers (weekends, 1-2x per week max)
 - Prefer articles that build intuition and explain "why" over dry references
-- Engineering leadership and design patterns are still welcome but secondary to course prep
+- Real-world engineering case studies (how Netflix/Google/Meta built X) are great for both goals
 """
