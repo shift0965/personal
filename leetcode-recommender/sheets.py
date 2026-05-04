@@ -15,7 +15,7 @@ USAGE_TAB = "LC Usage"
 
 # Headers for each tab
 PROBLEMS_HEADERS = ["ID", "Title", "Slug", "Difficulty", "Tags", "Acceptance Rate"]
-SOLVED_HEADERS = ["ID", "Title", "Solved Date"]
+SOLVED_HEADERS = ["ID", "Title", "Slug", "Solved Date"]
 SENT_HEADERS = ["Date", "ID", "Title", "Difficulty", "Tags", "URL", "Difficulty Rating", "Notes"]
 USAGE_HEADERS = ["Date", "Input Tokens", "Output Tokens", "Cost USD", "Duration (s)"]
 
@@ -80,13 +80,13 @@ def read_problems() -> list[dict]:
 
 
 def read_solved() -> set[str]:
-    """Read solved problem IDs from the Solved tab. Returns a set of ID strings."""
+    """Read solved problem slugs from the Solved tab. Returns a set of slug strings."""
     spreadsheet = _get_spreadsheet()
     ws = _ensure_tab(spreadsheet, SOLVED_TAB, SOLVED_HEADERS)
     rows = ws.get_all_values()
     if len(rows) <= 1:
         return set()
-    return {row[0].strip() for row in rows[1:] if row[0].strip()}
+    return {row[2].strip() for row in rows[1:] if len(row) > 2 and row[2].strip()}
 
 
 def read_sent() -> list[dict]:
@@ -154,6 +154,7 @@ def write_solved(solved: list[dict]):
         rows.append([
             str(s.get("id", "")),
             _safe_cell(str(s.get("title", ""))),
+            str(s.get("slug", "")),
             str(s.get("solved_date", "")),
         ])
     if rows:

@@ -8,10 +8,10 @@ from config import USER_PROFILE
 from leetcode import get_problem_url
 
 
-def filter_and_sample(problems: list[dict], solved_ids: set[str], sent: list[dict], sample_size: int = 100) -> list[dict]:
+def filter_and_sample(problems: list[dict], solved_slugs: set[str], sent: list[dict], sample_size: int = 100) -> list[dict]:
     """Filter out solved/recently-sent problems, then uniform-random sample.
 
-    - Removes solved problems (from Solved tab)
+    - Removes solved problems (matched by slug)
     - Removes problems sent in the last 16 months
     - Randomly samples `sample_size` problems (uniform, each problem has equal chance)
     """
@@ -26,10 +26,10 @@ def filter_and_sample(problems: list[dict], solved_ids: set[str], sent: list[dic
         except (ValueError, KeyError):
             recently_sent_ids.add(s.get("id", ""))
 
-    # Filter
+    # Filter by slug for solved (slug is consistent across APIs), by ID for sent
     pool = [
         p for p in problems
-        if p["id"] not in solved_ids and p["id"] not in recently_sent_ids
+        if p["slug"] not in solved_slugs and p["id"] not in recently_sent_ids
     ]
 
     if not pool:

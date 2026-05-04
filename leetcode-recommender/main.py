@@ -21,7 +21,6 @@ from config import LEETCODE_SESSION
 from leetcode import fetch_problem_catalog, fetch_solved_history
 from sheets import (
     init_sheets,
-    read_feedback,
     read_problems,
     read_sent,
     read_solved,
@@ -66,18 +65,18 @@ def run():
     # Normal run: recommend 3 problems
     print("[2] Reading context from Sheets...")
     problems = read_problems()
-    solved_ids = read_solved()
+    solved_slugs = read_solved()
     sent = read_sent()
-    feedback = read_feedback()
+    feedback = [s for s in sent if s.get("difficulty_rating")]
 
-    print(f"       Catalog: {len(problems)} problems, Solved: {len(solved_ids)}, Sent: {len(sent)}, Feedback: {len(feedback)}")
+    print(f"       Catalog: {len(problems)} problems, Solved: {len(solved_slugs)}, Sent: {len(sent)}, Feedback: {len(feedback)}")
 
     if not problems:
         print("[ERROR] No problems in catalog. Run --init-catalog first.")
         sys.exit(1)
 
     print("[3] Filtering and sampling...")
-    sampled = filter_and_sample(problems, solved_ids, sent)
+    sampled = filter_and_sample(problems, solved_slugs, sent)
     print(f"       Sampled {len(sampled)} problems for Claude.")
 
     if not sampled:
